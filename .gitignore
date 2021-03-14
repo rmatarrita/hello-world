@@ -1,0 +1,29 @@
+
+#Ignore thumbnails created by Windows
+Thumbs.db
+#Ignore files built by Visual Studio
+/**/.vs/
+**/ipch/
+*.config
+*.user
+*.suo
+*.cache
+*.log
+*.tlog
+*.1u.tlog
+*.lib
+*.ilk
+*.idb
+*.ipdb
+*.iobj
+*.obj
+*.map
+*.exp
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+*.sdf
+*.dll
+*.pdb
+*.aps
