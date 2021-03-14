@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script src="ema.js"></script>
+        <title>Jackpot Simulation with Exponential Moving Average</title>
+    </head>
+    <body>
+        <p style="font-weight: bold;">Jackpot simulation using Exponential Moving Average (EMA)</p>
+        <p>The implementation is based on the idea of using EMA to smoothen the jackpot grow over time. 
+            The alpha factor allows to accomodate for sudden spikes in gameplay as well as periods of idle activity (no contribution).
+            <a href="https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average">Wikipedia</a>
+        </p>
+        <div>alpha (between 0 and 1. 0 catches up more slowly, 1 catches up faster and breaks more abruptly):</div><input type="text" value="0.5" id="alpha"></input>
+        <input type="button" value="Apply" onclick="changeAlpha();"><br>
+        <div>refresh frequency (secs):</div><input type="text" value="5" id="refreshInterval"></input> 
+        <input type="button" value="Apply" onclick="changeRefresh();"> <br><br>
+        <div>Jackpot: <div style="font-weight: bold;" id="jackpotValue">hola</div></div><br>
+        <div>Type new jackpot value (it will be read automatically):</div><br>
+        <input type="text" value="1000" id="jackpotInput"></input><br><br>
+        <input type="button" value="Reset Simulation" onclick="reset();">
+        <div id="history"></div>
+    </body>
+</html>

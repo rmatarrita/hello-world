@@ -1,0 +1,90 @@
+const maxSpeed = 5; //ms per cent
+
+let jackpotMeter = 1000;
+let alpha = 0.5;
+let balanceRequestInterval = 5000;
+let S = 1;
+let speed = 1000; // initial speed in ms/cent
+let refreshIntervalTimer = undefined;
+let jackpotTimer = undefined;
+let dateObj = new Date();
+
+function changeAlpha() {
+    let newValue = document.getElementById("alpha").value;
+    if (newValue >= 0 && newValue <= 1) {
+        alpha = newValue;
+        console.log("alpha changed to " + alpha);
+    } 
+}
+
+function changeRefresh() {
+    let newValue = document.getElementById("refreshInterval").value * 1000;
+    if (newValue >= 0 && newValue <= 30000) {
+        balanceRequestInterval = newValue;
+        console.log("refresh interval changed to " + balanceRequestInterval);
+    } 
+    window.clearInterval(refreshIntervalTimer);
+    refreshIntervalTimer = window.setInterval(processNewJackpotValue, balanceRequestInterval);
+}
+
+
+function incrementJackpot(jackpot) {
+    jackpot = Math.ceil(jackpot * 100) + 1; //increment 1 cent
+    let jackpotText = parseInt(jackpot / 100) + "." + parseInt(jackpot % 100);
+    return jackpotText;
+}
+
+function animateJackpot() {
+    if (jackpotMeter*100 < Math.floor(S*100))
+    {
+        jackpotMeter = incrementJackpot(jackpotMeter);
+        document.getElementById("jackpotValue").innerText = jackpotMeter;
+    }
+    jackpotTimer = window.setTimeout(animateJackpot, speed);
+}
+
+window.onload = function() {
+    refreshIntervalTimer = window.setInterval(processNewJackpotValue, balanceRequestInterval);
+    jackpotTimer = window.setTimeout(animateJackpot(), speed);
+    reset();
+};
+
+function reset() {
+    let newJackpotValue = document.getElementById("jackpotInput").value;
+    S = newJackpotValue;
+    document.getElementById("jackpotValue").innerText = newJackpotValue;
+    document.getElementById("history").innerHTML = "";
+}
+
+function updateSpeed() {
+    jackpotMeter = document.getElementById("jackpotValue").innerText;
+    let centsIncremented = (S - jackpotMeter) * 100;
+    if (centsIncremented > 0) {    
+        console.log("increased " + centsIncremented + " cents since the last call")    
+        let newSpeed = balanceRequestInterval / centsIncremented; // in ms/cent
+        if (newSpeed > balanceRequestInterval)
+        {
+            newSpeed = balanceRequestInterval;
+        }
+        if (newSpeed < maxSpeed)
+        {
+            newSpeed = maxSpeed;
+        }
+        speed = newSpeed;
+        console.log("new speed is " + speed + " ms/cent")    
+    }
+}
+
+function processNewJackpotValue(){
+    let newJackpotValue = document.getElementById("jackpotInput").value;
+    let previousS = S;
+    S = alpha * newJackpotValue + (1 - alpha) * S;
+    let incrementSinceLastQuery = (S - previousS) * 100;
+    updateSpeed();
+    //S = alpha * newJackpotValue + S - alpha * S
+    //S = alpha * (newJackpotValue - S) + S;
+    let nowStamp = Date.now();
+    document.getElementById("history").innerHTML =  "At " + nowStamp % 1613450000000 + ": S:" + S 
+    + " (from S' " + previousS + ", delta (cents):"+incrementSinceLastQuery+") <br>"
+    + document.getElementById("history").innerHTML;
+}
