@@ -1,0 +1,14 @@
+{
+  "name": "power",
+  "version": "1.0.0",
+  "description": "Efficient power math function with unit tests",
+  "main": "power.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "rmatarrita",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
+}
